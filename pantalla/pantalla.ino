@@ -1,3 +1,4 @@
+
 /////////////////////////////////////
 //programa para control de alto voltaje
 //mediante la implementacion de LCD TOUCH TFT de 3.2´´
@@ -23,6 +24,15 @@ extern uint8_t SevenSegNumFont[];
 //variables que estaremos utilizando
 int x,y,pantalla=1,k,voltaje=1,p=0,p1=0,p2=0,p3=0,vout=0;
 char dato[20];
+
+//variables para tomar datos de UART
+
+String str = "";
+const char separator = ',';
+const int dataLength = 2;
+int data[dataLength];
+char vin[20];
+      char current[20];
 
 
 void botones1(){ ///////////////////////////////////////botones pantalla 1
@@ -329,27 +339,68 @@ void setup(){
   myTouch.InitTouch();
   myTouch.setPrecision(PREC_HI);
   Serial.begin(9600);
+  Serial.setTimeout(50);
   }
-
+void vinput(){
+  
+      str = Serial.readStringUntil('\n');
+      for (int i = 0; i < dataLength ; i++)
+      {
+         int index = str.indexOf(separator);
+         data[i] = str.substring(0, index).toInt();
+         str = str.substring(index + 1);
+      }
+      //DEBUG_ARRAY(data);
+      
+      for (int i = 0; i < sizeof(data) / sizeof(data[0]); i++)    
+      {
+        Serial.print(data[i]); 
+      Serial.print('\t');} 
+      Serial.println();
+      
+                  myGLCD.setFont(BigFont);
+                  sprintf(vin, "%d",data[0]);
+                  sprintf(current, "%d", data[1]);
+                  myGLCD.print("     " ,10,50);
+                  myGLCD.print("     " ,10,70);
+                  myGLCD.setBackColor(0,0,0);
+                  myGLCD.setColor(255,255,255);
+                  myGLCD.print(vin ,10,50);
+                  myGLCD.print(current ,10,70);
+  }
 void loop(){
 
 ////////////////////////////////////pantalla 1
 if(pantalla == 1){
     myGLCD.fillScr(VGA_BLACK);
     botones1();
-    
     myGLCD.setFont(BigFont); 
     char set[25];
     sprintf(set, "%d",vout);
     myGLCD.setBackColor(0,0,0);
     myGLCD.print(set ,10,100);
-    myGLCD.print(" V set" ,75,100);
+    myGLCD.print("V set" ,100,100);
+    myGLCD.print("V out" ,100,50);
+    myGLCD.print("mA out" ,100,70);
+    myGLCD.print(vin ,10,50);
+    myGLCD.print(current ,10,70);
     while(true)
          {
           if(myTouch.dataAvailable())touch1();
           if(pantalla == 2 )break;
-         }
-}
+
+      if (Serial.available()>0){
+        
+      vinput();
+   }
+                  
+//                  vin="";
+   
+   
+            }
+            }
+          
+        
 //////////////////////////////////pantalla 2
 if(pantalla == 2){
   myGLCD.fillScr(VGA_BLACK);
@@ -366,4 +417,3 @@ if(pantalla == 2){
 
 
   }
-
