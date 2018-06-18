@@ -170,7 +170,7 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
           myGLCD.setColor(0, 0, 0);
           myGLCD.setBackColor(255,255,255);
           int q;  
-          if(x1 == 1){
+          if(x1 == 1){      //////////////////////////////////algoritmo kilos
             if(w==0 && p<9){
             vout=vout+1000;
             p=p+1;
@@ -185,9 +185,9 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
               
               }
             myGLCD.print(dato,20*x1+80*x2+140*x3+200*x4,90);
-            Serial.println(vout);
+//            Serial.println(vout);
           }
-          if(x2 == 1){
+          if(x2 == 1){ /////////////////////////////////////////algoritmo centena
             if(w==0 && p1<9){
             vout=vout+100;
             p1=p1+1;
@@ -202,9 +202,9 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
               
               }
             myGLCD.print(dato,20*x1+80*x2+140*x3+200*x4,90);
-            Serial.println(vout);
+//            Serial.println(vout);
           }
-          if(x3 == 1){
+          if(x3 == 1){ //////////////////////////////////////////algoritmo decenas
             if(w==0 && p2<9){
             vout=vout+10;
             p2=p2+1;
@@ -219,9 +219,9 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
               
               }
             myGLCD.print(dato,20*x1+80*x2+140*x3+200*x4,90);
-            Serial.println(vout);
+            //Serial.println(vout);
           }
-          if(x4 == 1){
+          if(x4 == 1){ ////////////////////////////////algoritmo unidades
             if(w==0 && p3<9){
             vout=vout+1;
             p3=p3+1;
@@ -236,7 +236,7 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
               
               }
             myGLCD.print(dato,20*x1+80*x2+140*x3+200*x4,90);
-            Serial.println(vout);
+//            Serial.println(vout);
           }
           
           if(k==1){
@@ -321,7 +321,9 @@ void botones2(){ /////////////////////////////////////////////////////////// bot
           if((y>=70) && (y<=160)){
             marco1(250,70,310,160);
             pantalla =1;
-            
+            if(vout >=0 && vout <=1000){
+            Serial.println(vout);
+            }
             }
           
 
@@ -350,7 +352,6 @@ void vinput(){
          data[i] = str.substring(0, index).toInt();
          str = str.substring(index + 1);
       }
-      //DEBUG_ARRAY(data);
       
       for (int i = 0; i < sizeof(data) / sizeof(data[0]); i++)    
       {
@@ -389,12 +390,7 @@ if(pantalla == 1){
           if(myTouch.dataAvailable())touch1();
           if(pantalla == 2 )break;
 
-      if (Serial.available()>0){
-        
-      vinput();
-   }
-                  
-//                  vin="";
+      if (Serial.available()>0){vinput();}
    
    
             }
